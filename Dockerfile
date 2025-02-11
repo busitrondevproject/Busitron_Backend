@@ -1,6 +1,6 @@
-FROM node:22-alpine
+FROM node:21-alpine
 
-WORKDIR /Busitron_Backend
+WORKDIR /app
 
 COPY package.json .
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "npm","run","start"]
+CMD [ "npm", "run", "dev" ]

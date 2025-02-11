@@ -1,28 +1,37 @@
-# version: '3.8'
+services:
+    backend:
+        build: ./Chat-app/chatBackend
+        ports:
+            - "8080:8080"
+        networks:
+            - mern_network
+            # environment:
+            # MONGO_URI: mongodb://mongo:27017/mydatabase  
+        depends_on:
+            - mongodb
 
-# services:
-#   postgres:
-#     image: postgres:15
-#     container_name: my_postgres
-#     restart: always
-#     environment:
-#       POSTGRES_USER: myuser
-#       POSTGRES_PASSWORD: mypassword
-#       POSTGRES_DB: mydatabase
-#     ports:
-#       - "5432:5432"
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
+    #   frontend:
+    #     build: ./Chat-app/chatFrontend
+    #     ports:
+    #       - "5173:5173"
+    #     networks:
+    #       - mern_network
+    #     environment:
+    #       REACT_APP_API_URL: http://backend:5050
 
-#   redis:
-#     image: redis:alpine
-#     container_name: my_redis
-#     restart: always
-#     ports:
-#       - "6379:6379"
-#     volumes:
-#       - redis_data:/data
+    # mongodb:
+    #     image: mongo:latest
+    #     ports:
+    #         - "27017:27017"
+    #     networks:
+    #         - mern_network
+    #     volumes:
+    #         - mongo-data:/data/db
 
-# volumes:
-#   postgres_data:
-#   redis_data:
+networks:
+    mern_network:
+        driver: bridge
+
+volumes:
+    mongo-data:
+        driver: local # Persist MongoDB data locally
