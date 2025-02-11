@@ -4,6 +4,10 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+app.use(express.json());
+
+app.use(cookieParser());
+
 app.use(
     cors({
         origin: "*",
@@ -11,17 +15,8 @@ app.use(
     })
 );
 
-app.use(cookieParser());
-
 import authRouter from "./route/auth.route.js";
 
-app.use(
-    "/api/v1/auth",
-    (req, res, next) => {
-        console.log("onm iddle ware");
-        next();
-    },
-    authRouter
-);
+app.use("/api/v1/auth", authRouter);
 
 export { app };
