@@ -1,37 +1,37 @@
+version: "3.8"
+
 services:
     backend:
-        build: ./Chat-app/chatBackend
+        build: ./Busitron_Backend
         ports:
-            - "8080:8080"
+            - "1431:1431"
         networks:
-            - mern_network
-            # environment:
-            # MONGO_URI: mongodb://mongo:27017/mydatabase  
+            - busitron_network
         depends_on:
             - mongodb
 
-    #   frontend:
-    #     build: ./Chat-app/chatFrontend
-    #     ports:
-    #       - "5173:5173"
-    #     networks:
-    #       - mern_network
-    #     environment:
-    #       REACT_APP_API_URL: http://backend:5050
+    frontend:
+        build: ./busitron_frontend_revamp
+        ports:
+            - "5173:5173"
+        networks:
+            - busitron_network
+        depends_on:
+            - backend
 
-    # mongodb:
-    #     image: mongo:latest
-    #     ports:
-    #         - "27017:27017"
-    #     networks:
-    #         - mern_network
-    #     volumes:
-    #         - mongo-data:/data/db
+    mongodb:
+        image: mongo:7.0.7
+        ports:
+            - "27017:27017"
+        networks:
+            - busitron_network
+        volumes:
+            - mongo-data:/data/db
 
 networks:
-    mern_network:
+    busitron_network:
         driver: bridge
 
 volumes:
     mongo-data:
-        driver: local # Persist MongoDB data locally
+        driver: local
