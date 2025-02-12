@@ -1,12 +1,14 @@
 import { Router } from "express";
 import {
-    registerUser,
+    registerUser,loginUser,getAllUser
 } from "../controller/auth.controller.js";
+import { get } from "mongoose";
 
 const router = Router();
 
 router.route("/register").post(registerUser);
-
+router.route("/login").post(loginUser);
+router.route("/getusers").get(getAllUser);
 // router.route("/login").post(loginUser);
 
 // Secured routes
