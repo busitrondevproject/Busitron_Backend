@@ -12,7 +12,6 @@ import generateOtp from "../helper/generateOtp.helper.js";
 export const registerUser = asyncHandler(async (req, res) => {
 	const { email } = req.body;
 	const password = generateRandomPassword();
-	console.log(password);
 
 	if (!email)
 		throw new errorHandler(400, "Email and full name are required!");

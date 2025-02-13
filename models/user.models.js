@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-import { type } from "os";
 
 const userSchema = new Schema(
 	{
@@ -45,7 +44,7 @@ const userSchema = new Schema(
 		},
 		otp: {
 			type: String,
-			default:null,
+			default: null,
 			expiredAt: Date.now() + 10 * 60,
 		},
 		isValid: {

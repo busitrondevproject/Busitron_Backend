@@ -12,7 +12,7 @@ async function sendEmailUserDetails(email, password, res) {
 				pass: process.env.EMAIL_PASS,
 			},
 			tls: {
-				rejectUnauthorized: false, // Fix self-signed certificate error
+				rejectUnauthorized: false, 
 			},
 		});
 
