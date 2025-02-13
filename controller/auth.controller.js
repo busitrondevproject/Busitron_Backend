@@ -152,7 +152,7 @@ export const changePassword = asyncHandler(async (req, res) => {
 		const checkPassword = await user.isPasswordCorrect(previousPassword);
 
 		if (!checkPassword) {
-			throw new errorHandler(400, "password is not wrong");
+			throw new errorHandler(400, "password is wrong");
 		}
 		if (newPassword !== conformPassword) {
 			throw new errorHandler(400, "password not valid");

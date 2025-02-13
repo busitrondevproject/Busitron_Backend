@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../utils/errorHandle.js";
 
 const authenticateUser = (req, res, next) => {
-	const token = req.cookies["accessToken"];
+	const token =
+		req.cookies["accessToken"] ||
+		req.headers["authorization"]?.split(" ")[1];
 
 	if (!token) {
 		throw errorHandler(401, "token is not generated");
