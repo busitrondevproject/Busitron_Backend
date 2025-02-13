@@ -4,6 +4,10 @@ import { errorHandler } from "../utils/errorHandle.js";
 const authenticateUser = (req, res, next) => {
 	const token = req.cookies["accessToken"];
 
+	if (!token) {
+		throw errorHandler(401, "token is not generated");
+	}
+
 	try {
 		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 		req.user = decoded;
