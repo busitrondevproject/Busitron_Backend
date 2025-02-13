@@ -1,19 +1,31 @@
-import { Router } from "express";
+
+
+import express from "express";
 import {
-    registerUser,
+	changePassword,
+	loginUser,
+	otpVerification,
+	profileUpdate,
+	registerUser,
 } from "../controller/auth.controller.js";
+import authenticateUser from "../middlewares/authMiddleware.js";
 
-const router = Router();
+const router = express.Router();
 
-router.route("/register").post(registerUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 
-// router.route("/login").post(loginUser);
+router.post("/otp", authenticateUser, otpVerification);
 
-// Secured routes
-// router.route("/logout").post(verifyJWT, logoutUser);
+router.put("/profileupdate", authenticateUser, profileUpdate);
 
-// router.route("/refresh-token").get(refreshAccessToken);
+router.put("/changePassword", authenticateUser, changePassword);
 
-// router.route("/changePassword").post(verifyJWT, changeCurrentPassword);
+router.get("/profile", authenticateUser, (req, res) => {
+	res.status(200).json({
+		message: "This is a protected route",
+		user: req.user,
+	});
+});
 
 export default router;
