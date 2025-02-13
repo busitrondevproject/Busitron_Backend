@@ -16,10 +16,13 @@ app.use(
 );
 
 import authRouter from "./route/auth.route.js";
-import content from './route/content.routes.js';
-import Favourite from "./models/favourite.models.js";
+import content from './route/email.routes.js';
+
 app.use("/api/v1/auth", authRouter);
-app.use("/content",content);
-app.use('/starred',Favourite);
+app.use("/email",content);
+
+app.get("/", (req, res) => {
+    res.send("Hello, World!");
+});
 
 export { app };
