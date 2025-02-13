@@ -9,10 +9,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(
-    cors({
-        origin: "*",
-        credentials: true,
-    })
+	cors({
+		origin: "*",
+		credentials: true,
+	})
 );
 
 import authRouter from "./route/auth.route.js";

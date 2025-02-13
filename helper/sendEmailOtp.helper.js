@@ -12,7 +12,7 @@ async function sendEmailOtp(email, otp, res) {
 				pass: process.env.EMAIL_PASS,
 			},
 			tls: {
-				rejectUnauthorized: false, // Fix self-signed certificate error
+				rejectUnauthorized: false,
 			},
 		});
 		const mailOptions = {

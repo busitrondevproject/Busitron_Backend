@@ -12,7 +12,7 @@ async function sendEmailUserDetails(email, password, res) {
 				pass: process.env.EMAIL_PASS,
 			},
 			tls: {
-				rejectUnauthorized: false, 
+				rejectUnauthorized: false,
 			},
 		});
 
@@ -34,10 +34,10 @@ async function sendEmailUserDetails(email, password, res) {
 		};
 
 		await transporter.sendMail(mailOptions);
-		return { success: true, message: "Email sent successfully" }; // ✅ Return instead of sending response
+		return { success: true, message: "Email sent successfully" };
 	} catch (err) {
 		console.error("Error sending email:", err);
-		return { success: false, message: "Failed to send email" }; // ✅ Return failure response
+		return { success: false, message: "Failed to send email" };
 	}
 }
 
