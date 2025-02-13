@@ -1,32 +1,23 @@
-import jwt from 'jsonwebtoken';
-import {User} from '../models/user.models.js'; // Ensure the User model file uses ES Module syntax or has a .js extension
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
+import { errorHandler } from "../utils/errorHandle.js";
 
-dotenv.config(); // Ensure env variables are loaded
+const authenticateUser = (req, res, next) => {
+	const token =
+		req.cookies["accessToken"] ||
+		req.headers["authorization"]?.split(" ")[1];
 
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.header('Authorization');
+	if (!token) {
+		throw errorHandler(401, "token is not generated");
+	}
 
-    if (!token) {
-      return res.status(401).json({ error: 'Access denied. No token provided.' });
-    }
-
-    // Verify Token
-    const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
-
-    // Check if user exists
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    req.user = user; // Attach user to request
-    next();
-  } catch (error) {
-    console.error('Authentication error:', error);
-    return res.status(401).json({ error: 'Invalid token. Authentication failed.' });
-  }
+	try {
+		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+		req.user = decoded;
+		next();
+	} catch (error) {
+		throw new errorHandler(403, "Invalid or expired token");
+		next();
+	}
 };
 
-export default authMiddleware;
+export default authenticateUser;

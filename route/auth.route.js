@@ -1,21 +1,28 @@
-import { Router } from "express";
+import express from "express";
 import {
-    registerUser,loginUser,getAllUser
+	changePassword,
+	loginUser,
+	otpVerification,
+	profileUpdate,
+	registerUser,
 } from "../controller/auth.controller.js";
-import { get } from "mongoose";
 
-const router = Router();
+const router = express.Router();
 
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
-router.route("/getusers").get(getAllUser);
-// router.route("/login").post(loginUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 
-// Secured routes
-// router.route("/logout").post(verifyJWT, logoutUser);
+router.post("/otp", authenticateUser, otpVerification);
 
-// router.route("/refresh-token").get(refreshAccessToken);
+router.put("/profileupdate", authenticateUser, profileUpdate);
 
-// router.route("/changePassword").post(verifyJWT, changeCurrentPassword);
+router.put("/changePassword", authenticateUser, changePassword);
+
+router.get("/profile", authenticateUser, (req, res) => {
+	res.status(200).json({
+		message: "This is a protected route",
+		user: req.user,
+	});
+});
 
 export default router;
