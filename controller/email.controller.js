@@ -38,19 +38,7 @@ export const sendEmail = async (req, res, next) => {
 	}
 };
 
-export const getCalls = async (req, res, next) => {
-	try {
-		const userId = req.user.id;
 
-		const calls = await Call.find({
-			$or: [{ from_userid: userId }, { to_userid: userId }],
-		}).populate("from_userid to_userid", "username email");
-
-		res.status(200).json({ calls });
-	} catch (error) {
-		next(error);
-	}
-};
 
 export const getInboxMessages = async (req, res) => {
 	try {

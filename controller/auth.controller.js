@@ -2,17 +2,18 @@ import { User } from "../models/user.models.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
 import { errorHandler } from "../utils/errorHandle.js";
-
 import sendEmailUserDetails from "../helper/sendEmailUserDetails.helper.js";
 import sendEmailOtp from "../helper/sendEmailOtp.helper.js";
-
 import generateRandomPassword from "../helper/generateRandomPassword.helper.js";
 import generateOtp from "../helper/generateOtp.helper.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
 	try {
+	
 		const { email } = req.body;
+		
 		const password = generateRandomPassword();
+		
 
 		if (!email || !password)
 			throw new errorHandler(400, "email or password missing");
@@ -21,14 +22,13 @@ export const registerUser = asyncHandler(async (req, res) => {
 			throw new errorHandler(400, "Email and full name are required!");
 
 		const existedUser = await User.findOne({ email });
-
 		if (existedUser) throw new errorHandler(409, "User already exists");
 
 		const user = await User.create({
 			email,
 			password,
 		});
-
+	
 		const result = await sendEmailUserDetails(email, password, res);
 
 		if (result.success) {
@@ -65,6 +65,10 @@ export const loginUser = asyncHandler(async (req, res) => {
 	const accessToken = user.generateAccessToken();
 	const refreshToken = user.generateRefreshToken();
 
+	
+	
+	
+	
 	user.accessToken = accessToken;
 	user.refreshToken = refreshToken;
 
@@ -88,9 +92,10 @@ export const loginUser = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(
 			new apiResponse(
-				200, accessToken,
+				200,accessToken,
 				{ id: user._id, email: email },
-				"Login successful"
+				"Login successful",
+				
 			)
 		);
 });
