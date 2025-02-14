@@ -9,11 +9,9 @@ import generateOtp from "../helper/generateOtp.helper.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
 	try {
-	
 		const { email } = req.body;
-		
+
 		const password = generateRandomPassword();
-		
 
 		if (!email || !password)
 			throw new errorHandler(400, "email or password missing");
@@ -28,7 +26,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 			email,
 			password,
 		});
-	
+
 		const result = await sendEmailUserDetails(email, password, res);
 
 		if (result.success) {
@@ -65,10 +63,6 @@ export const loginUser = asyncHandler(async (req, res) => {
 	const accessToken = user.generateAccessToken();
 	const refreshToken = user.generateRefreshToken();
 
-	
-	
-	
-	
 	user.accessToken = accessToken;
 	user.refreshToken = refreshToken;
 
@@ -92,10 +86,10 @@ export const loginUser = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(
 			new apiResponse(
-				200,accessToken,
+				200,
+				accessToken,
 				{ id: user._id, email: email },
-				"Login successful",
-				
+				"Login successful"
 			)
 		);
 });
