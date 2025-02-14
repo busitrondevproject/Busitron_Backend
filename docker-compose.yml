@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     backend:
-        build: ./Busitron_Backend
+        build: .
         ports:
             - "1431:1431"
         networks:
@@ -11,7 +11,7 @@ services:
             - mongodb
 
     frontend:
-        build: ./busitron_frontend_revamp
+        build: ../busitron_frontend_revamp
         ports:
             - "5173:5173"
         networks:
