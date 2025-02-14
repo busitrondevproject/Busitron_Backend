@@ -88,7 +88,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 		.status(200)
 		.json(
 			new apiResponse(
-				200,
+				200, accessToken,
 				{ id: user._id, email: email },
 				"Login successful"
 			)
