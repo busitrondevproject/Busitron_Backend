@@ -6,17 +6,14 @@ const authenticateUser = (req, res, next) => {
 		req.cookies["accessToken"] ||
 		req.headers["authorization"]?.split(" ")[1];
 
-	if (!token) {
-		throw errorHandler(401, "token is not generated");
-	}
+	if (!token) return next(new errorHandler(401, "Token is not provided"));
 
 	try {
 		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 		req.user = decoded;
 		next();
 	} catch (error) {
-		throw new errorHandler(403, "Invalid or expired token");
-		next();
+		return next(new errorHandler(403, "Invalid or expired token"));
 	}
 };
 
