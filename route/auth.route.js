@@ -7,6 +7,7 @@ import {
 	otpVerification,
 	profileUpdate,
 	registerUser,
+	resendOtp,
 } from "../controller/auth.controller.js";
 import authenticateUser from "../middlewares/authMiddleware.js";
 
@@ -17,7 +18,9 @@ router.post("/login", loginUser);
 
 router.post("/otp", authenticateUser, otpVerification);
 
-router.put("/profileupdate", authenticateUser, profileUpdate);
+router.post("/re-sendOtp", authenticateUser, resendOtp);
+
+router.put("/profileUpdate", authenticateUser, profileUpdate);
 
 router.put("/changePassword", authenticateUser, changePassword);
 
