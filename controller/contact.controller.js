@@ -1,10 +1,7 @@
-import transporter from "../helper/emailHelper.js";
+import transporter from "../helper/email.helper.js";
 import { errorHandler } from "../utils/errorHandle.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
 import { apiResponse } from "../utils/apiResponse.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const sendContactEmail = asyncHandler(async (req, res, next) => {
     const { name, email, phone, message } = req.body;
@@ -14,7 +11,8 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
     }
 
     const companyName = "BUSITRON";
-    const companyLogo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU9x30TYV6de90iBrSbkyJipMx79PDf-KxwQ&s";
+    const companyLogo =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU9x30TYV6de90iBrSbkyJipMx79PDf-KxwQ&s";
     const companyWebsite = "https://www.busitron.com";
     const supportEmail = "support@busitron.com";
     const supportPhone = "+1 800-123-4567";
@@ -96,7 +94,7 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
             </table>
         </div>
     `;
-    
+
     try {
         await transporter.sendMail({
             from: process.env.EMAIL,
@@ -111,4 +109,3 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
         return next(new errorHandler(500, "Email sending failed!", error));
     }
 });
-
