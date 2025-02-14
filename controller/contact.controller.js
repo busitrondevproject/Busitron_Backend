@@ -15,9 +15,6 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
 
     const companyName = "BUSITRON";
     const companyLogo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU9x30TYV6de90iBrSbkyJipMx79PDf-KxwQ&s";
-    const ceoName = "Yishaan Varma";
-    const ceoTitle = "Chief Executive Officer";
-    const ceoEmail = "yishaan@busitron.com";
     const companyWebsite = "https://www.busitron.com";
     const supportEmail = "support@busitron.com";
     const supportPhone = "+1 800-123-4567";
@@ -74,9 +71,6 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
                                 <!-- Left Side: Company Details -->
                                 <td style="width: 50%; padding: 15px; text-align: left; vertical-align: top;">
                                     <h4 style="color: #0073e6; margin: 5px 0;">${companyName}</h4>
-                                    <p style="font-size: 14px; color: #555;"><strong>${ceoTitle}:</strong> ${ceoName}</p>
-                                    <p style="font-size: 14px; color: #555;"><strong>Email:</strong> <a href="mailto:${ceoEmail}" style="color: #0073e6;">${ceoEmail}</a></p>
-                                    <p style="font-size: 14px; color: #555;"><strong>Website:</strong> <a href="${companyWebsite}" style="color: #0073e6;">${companyWebsite}</a></p>
                                 </td>
 
                                 <!-- Right Side: Support Info -->
