@@ -20,7 +20,6 @@ async function sendEmailOtp(email, otp, res) {
 			to: email,
 			subject: "Your OTP for Account Verification",
 			html: `
-        <h2>Hello,</h2>
         <p>Thank you for signing up. Here is your One-Time Password (OTP) for account verification:</p>
         <h3 style="color: #333;">${otp}</h3>
         <p>Please enter this OTP to verify your account. It is valid for 10 minutes.</p>

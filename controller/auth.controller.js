@@ -193,8 +193,10 @@ export const passwordInvitation = asyncHandler(async (req, res) => {
 		if (!email) {
 			throw new errorHandler(400, "Email most be required");
 		}
+		const checkMail = await User.findOne({ email });
+		if (!checkMail) throw new errorHandler(400, "email is  not register");
 		const response = await passwordForgotInvitation(email, res);
-		
+
 		if (response.success) {
 			res.status(200).json(
 				new apiResponse(
