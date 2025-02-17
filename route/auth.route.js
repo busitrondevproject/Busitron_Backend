@@ -1,5 +1,3 @@
-
-
 import express from "express";
 import {
 	changePassword,
@@ -11,7 +9,7 @@ import {
 	registerUser,
 	resendOtp,
 } from "../controller/auth.controller.js";
-import authenticateUser from "../middlewares/authMiddleware.js"
+import authenticateUser from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -26,9 +24,9 @@ router.put("/profileUpdate", authenticateUser, profileUpdate);
 
 router.put("/changePassword", authenticateUser, changePassword);
 
-router.post("/forgot_invitation",authenticateUser,passwordInvitation);
+router.post("/forgot_invitation", authenticateUser, passwordInvitation);
 
-router.post("/forgot_password",authenticateUser,forgotPassword)
+router.post("/forgot_password", authenticateUser, forgotPassword);
 
 router.get("/profile", authenticateUser, (req, res) => {
 	res.status(200).json({
