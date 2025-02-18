@@ -1,10 +1,10 @@
-
-
 import express from "express";
 import {
 	changePassword,
+	forgotPassword,
 	loginUser,
 	otpVerification,
+	passwordInvitation,
 	profileUpdate,
 	registerUser,
 	resendOtp,
@@ -23,6 +23,10 @@ router.post("/re-sendOtp", authenticateUser, resendOtp);
 router.put("/profileUpdate", authenticateUser, profileUpdate);
 
 router.put("/changePassword", authenticateUser, changePassword);
+
+router.post("/forgot_invitation", authenticateUser, passwordInvitation);
+
+router.post("/forgot_password", authenticateUser, forgotPassword);
 
 router.get("/profile", authenticateUser, (req, res) => {
 	res.status(200).json({

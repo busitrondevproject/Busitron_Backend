@@ -9,156 +9,243 @@ import sendEmailOtp from "../helper/sendEmailOtp.helper.js";
 import generateRandomPassword from "../helper/generateRandomPassword.helper.js";
 import generateOtp from "../helper/generateOtp.helper.js";
 
+import passwordForgotInvitation from "../helper/passwordForgotInvination.helper.js";
+import changePasswordSuccessfulinviation from "../helper/changePasswordSuccessfulIinviation.js";
+
 export const registerUser = asyncHandler(async (req, res) => {
-    try {
-        const { email } = req.body;
-        const password = generateRandomPassword();
+	try {
+		const { email } = req.body;
+		const password = generateRandomPassword();
 
-        if (!email || !password) throw new errorHandler(400, "email or password missing");
+		if (!email || !password)
+			throw new errorHandler(400, "email or password missing");
 
-        if (!email) throw new errorHandler(400, "Email and full name are required!");
+		const existedUser = await User.findOne({ email });
 
-        const existedUser = await User.findOne({ email });
+		if (existedUser) throw new errorHandler(409, "User already exists");
 
-        if (existedUser) throw new errorHandler(409, "User already exists");
+		const user = await User.create({
+			email,
+			password,
+		});
 
-        const user = await User.create({
-            email,
-            password,
-        });
+		const result = await sendEmailUserDetails(email, password, res);
 
-        const result = await sendEmailUserDetails(email, password, res);
-
-        if (result.success) {
-            res.status(201).json(
-                new apiResponse(201, { id: user._id, email: email }, "register successfully")
-            );
-        } else {
-            throw errorHandler(400, "some thing went wrong");
-        }
-    } catch (err) {
-        throw new errorHandler(500, err.message);
-    }
+		if (result.success) {
+			res.status(201).json(
+				new apiResponse(
+					201,
+					{ id: user._id, email: email },
+					"register successfully"
+				)
+			);
+		} else {
+			throw errorHandler(400, "some thing went wrong");
+		}
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+	const { email, password } = req.body;
 
-    if (!email || !password) throw new errorHandler(400, "Email and password are required!");
+	if (!email || !password)
+		throw new errorHandler(400, "Email and password are required!");
 
-    const user = await User.findOne({ email });
+	const user = await User.findOne({ email });
 
-    if (!user) throw new errorHandler(401, "Invalid email or password");
+	if (!user) throw new errorHandler(401, "Invalid email or password");
 
-    const isPasswordValid = await user.isPasswordCorrect(password);
+	const isPasswordValid = await user.isPasswordCorrect(password);
 
-    if (!isPasswordValid) throw new errorHandler(401, "Invalid email or password");
+	if (!isPasswordValid)
+		throw new errorHandler(401, "Invalid email or password");
 
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+	const accessToken = user.generateAccessToken();
+	const refreshToken = user.generateRefreshToken();
 
-    user.accessToken = accessToken;
-    user.refreshToken = refreshToken;
+	user.accessToken = accessToken;
+	user.refreshToken = refreshToken;
 
-    await user.save();
+	await user.save();
 
-    res.cookie("accessToken", accessToken);
-    res.cookie("refreshToken", refreshToken);
+	res.cookie("accessToken", accessToken);
+	res.cookie("refreshToken", refreshToken);
 
-    if (!user.isValid) {
-        const otp = generateOtp();
+	if (!user.isValid) {
+		const otp = generateOtp();
 
-        const response = await sendEmailOtp(email, otp, res);
+		const response = await sendEmailOtp(email, otp, res);
 
-        if (response.success) {
-            user.otp = otp;
-            await user.save();
-        }
-    }
+		if (response.success) {
+			user.otp = otp;
+			await user.save();
+		}
+	}
 
-    return res
-        .status(200)
-        .json(new apiResponse(200, { id: user._id, email: email }, "Login successful"));
+	return res
+		.status(200)
+		.json(
+			new apiResponse(
+				200,
+				{ id: user._id, email: email },
+				"Login successful"
+			)
+		);
 });
 
 export const otpVerification = asyncHandler(async (req, res) => {
-    try {
-        const { otp } = req.body;
-        const user = await User.findById(req.user._id);
-        if (!user) throw new errorHandler(404, "User not found");
+	try {
+		const { otp } = req.body;
+		const user = await User.findById(req.user._id);
+		if (!user) throw new errorHandler(404, "User not found");
 
-        const getOtp = user.otp;
-        if (otp === getOtp) {
-            user.isValid = true;
-            await user.save();
+		const getOtp = user.otp;
+		if (otp === getOtp) {
+			user.isValid = true;
+			await user.save();
 
-            return res.status(201).json(new apiResponse(201, null, "otp verified successfully"));
-        } else {
-            throw new errorHandler(400, "otp is invalid");
-        }
-    } catch (err) {
-        throw new errorHandler(500, err.message);
-    }
+			return res
+				.status(201)
+				.json(new apiResponse(201, null, "otp verified successfully"));
+		} else {
+			throw new errorHandler(400, "otp is invalid");
+		}
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
 });
 
 export const profileUpdate = asyncHandler(async (req, res) => {
-    const { phoneNumber, fullName, avatar } = req.body;
+	const { phoneNumber, fullName, avatar } = req.body;
 
-    if (!phoneNumber || !fullName || !avatar) {
-        throw new errorHandler(400, "all fields are required");
-    }
+	if (!phoneNumber || !fullName || !avatar) {
+		throw new errorHandler(400, "all fields are required");
+	}
 
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.user._id,
-            {
-                phoneNumber,
-                name: fullName,
-                avatar,
-            },
-            { new: true }
-        );
+	try {
+		const user = await User.findByIdAndUpdate(
+			req.user._id,
+			{
+				phoneNumber,
+				name: fullName,
+				avatar,
+			},
+			{ new: true }
+		);
 
-        return res.status(201).json(new apiResponse(201, user, "profile updated successfully"));
-    } catch (err) {
-        throw new errorHandler(400, err.message);
-    }
+		return res
+			.status(201)
+			.json(new apiResponse(201, user, "profile updated successfully"));
+	} catch (err) {
+		throw new errorHandler(400, err.message);
+	}
 });
 
 export const changePassword = asyncHandler(async (req, res) => {
-    try {
-        const { newPassword, conformPassword, previousPassword } = req.body;
-        const userId = req.user._id;
-        const user = await User.findById(userId);
-        if (!user) throw new errorHandler(404, "user not found");
-        const checkPassword = await user.isPasswordCorrect(previousPassword);
+	try {
+		const { newPassword, conformPassword, previousPassword } = req.body;
+		const userId = req.user._id;
+		const user = await User.findById(userId);
+		if (!user) throw new errorHandler(404, "user not found");
+		const checkPassword = await user.isPasswordCorrect(previousPassword);
 
-        if (!checkPassword) {
-            throw new errorHandler(400, "password is wrong");
-        }
-        if (newPassword !== conformPassword) {
-            throw new errorHandler(400, "password not valid");
-        }
-        user.password = newPassword;
-        await user.save();
-        return res.status(201).json(new apiResponse(201, null, "password updated successfully"));
-    } catch (err) {
-        throw new errorHandler(500, err.message);
-    }
+		if (!checkPassword) {
+			throw new errorHandler(400, "password is wrong");
+		}
+		if (newPassword !== conformPassword) {
+			throw new errorHandler(400, "password not valid");
+		}
+		user.password = newPassword;
+		await user.save();
+		return res
+			.status(201)
+			.json(new apiResponse(201, null, "password updated successfully"));
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
 });
 
 export const resendOtp = asyncHandler(async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const user = await User.findById(userId);
-        if (!user) throw new errorHandler(404, "user not found");
-        const otp = generateOtp();
-        const response = await sendEmailOtp(user.email, otp, res);
-        if (!response.success) throw new errorHandler(400, "otp not send successfully");
-        user.otp = otp;
-        await user.save();
-        res.status(201).json(new apiResponse(201, null, "otp send successfully"));
-    } catch (err) {
-        throw new errorHandler(500, err.message);
-    }
+	try {
+		const userId = req.user._id;
+		const user = await User.findById(userId);
+		if (!user) throw new errorHandler(404, "user not found");
+		const otp = generateOtp();
+		const response = await sendEmailOtp(user.email, otp, res);
+		if (!response.success)
+			throw new errorHandler(400, "otp not send successfully");
+		user.otp = otp;
+		await user.save();
+		res.status(201).json(
+			new apiResponse(201, null, "otp send successfully")
+		);
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
+});
+
+export const passwordInvitation = asyncHandler(async (req, res) => {
+	try {
+		const { email } = req.body;
+		if (!email) throw new errorHandler(400, "Email must be required");
+
+		const checkMail = await User.findOne({ email });
+		if (!checkMail) throw new errorHandler(400, "email is not register");
+
+		const response = await passwordForgotInvitation(email, res);
+		if (response.success) {
+			res.status(200).json(
+				new apiResponse(
+					200,
+					null,
+					"Forgot password link send Successfully"
+				)
+			);
+		} else {
+			throw new errorHandler(500, "Forgot password mail not send ");
+		}
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
+});
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+	try {
+		const { newPassword, conformPassword } = req.body;
+		if (!newPassword || !conformPassword)
+			throw new errorHandler(400, "All fields required");
+
+		if (newPassword !== conformPassword) {
+			throw new errorHandler(
+				400,
+				"newPassword and conformPassword must be same"
+			);
+		}
+
+		const user = await User.findById(req.user._id);
+		if (!user) throw new errorHandler(404, "user not found");
+
+		user.password = newPassword;
+		await user.save();
+		const response = await changePasswordSuccessfulinviation(
+			user.email,
+			res
+		);
+
+		if (response.success) {
+			return res
+				.status(200)
+				.json(
+					new apiResponse(
+						200,
+						null,
+						"your password changed  Successfully"
+					)
+				);
+		}
+	} catch (err) {
+		throw new errorHandler(500, err.message);
+	}
 });
