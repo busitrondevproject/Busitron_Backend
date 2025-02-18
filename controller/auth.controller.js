@@ -189,20 +189,18 @@ export const resendOtp = asyncHandler(async (req, res) => {
 export const passwordInvitation = asyncHandler(async (req, res) => {
 	try {
 		const { email } = req.body;
+		if (!email) throw new errorHandler(400, "Email must be required");
 
-		if (!email) {
-			throw new errorHandler(400, "Email most be required");
-		}
 		const checkMail = await User.findOne({ email });
-		if (!checkMail) throw new errorHandler(400, "email is  not register");
-		const response = await passwordForgotInvitation(email, res);
+		if (!checkMail) throw new errorHandler(400, "email is not register");
 
+		const response = await passwordForgotInvitation(email, res);
 		if (response.success) {
 			res.status(200).json(
 				new apiResponse(
 					200,
 					null,
-					"Forgot password mail send Successfully"
+					"Forgot password link send Successfully"
 				)
 			);
 		} else {
@@ -216,20 +214,19 @@ export const passwordInvitation = asyncHandler(async (req, res) => {
 export const forgotPassword = asyncHandler(async (req, res) => {
 	try {
 		const { newPassword, conformPassword } = req.body;
-		if (!newPassword || !conformPassword) {
+		if (!newPassword || !conformPassword)
 			throw new errorHandler(400, "All fields required");
-		}
+
 		if (newPassword !== conformPassword) {
 			throw new errorHandler(
 				400,
-				"newPassword and conformPassword most be same"
+				"newPassword and conformPassword must be same"
 			);
 		}
 
 		const user = await User.findById(req.user._id);
-		if (!user) {
-			throw new errorHandler(400, "user not found");
-		}
+		if (!user) throw new errorHandler(404, "user not found");
+
 		user.password = newPassword;
 		await user.save();
 		const response = await changePasswordSuccessfulinviation(
