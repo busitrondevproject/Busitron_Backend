@@ -1,22 +1,9 @@
-import nodemailer from "nodemailer";
+import transporter from "./email.helper.js";
 
-async function sendEmailOtp(email, otp, res) {
+async function sendEmailOtp(email, otp) {
 	try {
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			host: process.env.EMAIL_HOST,
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env.EMAIL_USERNAME,
-				pass: process.env.EMAIL_PASS,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
 		const mailOptions = {
-			from: "pavanponnana1@gmail.com",
+			from: process.env.EMAIL_USERNAME,
 			to: email,
 			subject: "Your OTP for Account Verification",
 			html: `

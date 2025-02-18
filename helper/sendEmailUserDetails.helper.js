@@ -1,20 +1,7 @@
-import nodemailer from "nodemailer";
+import transporter from "./email.helper.js";
 
-async function sendEmailUserDetails(email, password, res) {
+async function sendEmailUserDetails(email, password) {
 	try {
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			host: process.env.EMAIL_HOST,
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env.EMAIL_USERNAME,
-				pass: process.env.EMAIL_PASS,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
 
 		const mailOptions = {
 			from: process.env.EMAIL_USERNAME,

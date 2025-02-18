@@ -1,22 +1,8 @@
-import nodemailer from "nodemailer";
+import transporter from "./email.helper.js";
 
-async function passwordForgotInvitation(email, res) {
+async function passwordForgotInvitation(email) {
 	try {
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			host: process.env.EMAIL_HOST,
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env.EMAIL_USERNAME,
-				pass: process.env.EMAIL_PASS,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
-
-		const resetURL = `http://yourfrontend.com/reset-password`;
+		const resetURL = `http://localhost:5173/enter-new-password`;
 		const mailOptions = {
 			from: "pavanponnana1@gmail.com",
 			to: email,

@@ -97,7 +97,7 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
 
     try {
         await transporter.sendMail({
-            from: process.env.EMAIL,
+            from: process.env.EMAIL_USERNAME,
             to: process.env.SUPER_ADMIN_EMAIL,
             subject: "New Business Inquiry – Contact Form Submission",
             html: emailContent,
@@ -105,7 +105,6 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
 
         return res.status(200).json(new apiResponse(200, null, "Email sent successfully!"));
     } catch (error) {
-        console.error("Email sending error:", error);
         return next(new errorHandler(500, "Email sending failed!", error));
     }
 });
