@@ -1,10 +1,10 @@
-import transporter from "./email.helper.js";
+import transporter from "../services/nodemailer.service.js";
 
-async function sendEmailUserDetails(email, password) {
+async function sendUserCredential(email, password) {
 	try {
 
 		const mailOptions = {
-			from: process.env.EMAIL_USERNAME,
+			from: process.env.SUPER_ADMIN_EMAIL,
 			to: email,
 			subject: "Your Account Login Credentials",
 			html: `
@@ -28,4 +28,4 @@ async function sendEmailUserDetails(email, password) {
 	}
 }
 
-export default sendEmailUserDetails;
+export default sendUserCredential;

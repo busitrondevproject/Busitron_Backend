@@ -1,6 +1,6 @@
-import transporter from "./email.helper.js";
+import transporter from "../services/nodemailer.service.js";
 
-async function changePasswordSuccessfulinviation(email) {
+async function sendResetPasswordConfirmation(email) {
 	try {
 		const resetURL = `http://yourfrontend.com/reset-password`;
 		const mailOptions = {
@@ -21,4 +21,4 @@ async function changePasswordSuccessfulinviation(email) {
 		return { success: false, message: "Email not sent" };
 	}
 }
-export default changePasswordSuccessfulinviation;
+export default sendResetPasswordConfirmation;

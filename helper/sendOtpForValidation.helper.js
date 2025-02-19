@@ -1,9 +1,9 @@
-import transporter from "./email.helper.js";
+import transporter from "../services/nodemailer.service.js";
 
-async function sendEmailOtp(email, otp) {
+async function sendOtpForValidation(email, otp) {
 	try {
 		const mailOptions = {
-			from: process.env.EMAIL_USERNAME,
+			from: process.env.SUPER_ADMIN_EMAIL,
 			to: email,
 			subject: "Your OTP for Account Verification",
 			html: `
@@ -22,4 +22,4 @@ async function sendEmailOtp(email, otp) {
 		return { success: false, message: "Email not sent" };
 	}
 }
-export default sendEmailOtp;
+export default sendOtpForValidation;

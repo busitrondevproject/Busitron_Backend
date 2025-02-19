@@ -1,7 +1,7 @@
-import transporter from "../helper/email.helper.js";
 import { errorHandler } from "../utils/errorHandle.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import transporter from "../services/nodemailer.service.js";
 
 export const sendContactEmail = asyncHandler(async (req, res, next) => {
     const { name, email, phone, message } = req.body;
@@ -97,7 +97,7 @@ export const sendContactEmail = asyncHandler(async (req, res, next) => {
 
     try {
         await transporter.sendMail({
-            from: process.env.EMAIL_USERNAME,
+            from: process.env.SUPER_ADMIN_EMAIL,
             to: process.env.SUPER_ADMIN_EMAIL,
             subject: "New Business Inquiry – Contact Form Submission",
             html: emailContent,

@@ -8,7 +8,7 @@ import {
 	registerUser,
 	resendOtp,
 } from "../controller/auth.controller.js";
-import authenticateUser from "../middlewares/authMiddleware.js";
+import authenticateUser from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 

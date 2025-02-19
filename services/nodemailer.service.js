@@ -4,12 +4,12 @@ dotenv.config();
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
-  host: process.env.EMAIL_HOST,
+  host: process.env.NODEMAILER_HOST,
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.SUPER_ADMIN_EMAIL,
+    pass: process.env.NODEMAILER_PASSWORD,
   },
 });
 
