@@ -23,4 +23,4 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/contact", contactRouter);
 
 
-export { app };
+export default app;

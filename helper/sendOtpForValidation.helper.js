@@ -1,22 +1,9 @@
-import nodemailer from "nodemailer";
+import transporter from "../services/nodemailer.service.js";
 
-async function sendEmailOtp(email, otp, res) {
+async function sendOtpForValidation(email, otp) {
 	try {
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			host: process.env.EMAIL_HOST,
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env.EMAIL_USERNAME,
-				pass: process.env.EMAIL_PASS,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
 		const mailOptions = {
-			from: "pavanponnana1@gmail.com",
+			from: process.env.SUPER_ADMIN_EMAIL,
 			to: email,
 			subject: "Your OTP for Account Verification",
 			html: `
@@ -35,4 +22,4 @@ async function sendEmailOtp(email, otp, res) {
 		return { success: false, message: "Email not sent" };
 	}
 }
-export default sendEmailOtp;
+export default sendOtpForValidation;

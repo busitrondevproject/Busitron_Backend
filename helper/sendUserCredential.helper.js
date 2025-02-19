@@ -1,23 +1,10 @@
-import nodemailer from "nodemailer";
+import transporter from "../services/nodemailer.service.js";
 
-async function sendEmailUserDetails(email, password, res) {
+async function sendUserCredential(email, password) {
 	try {
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			host: process.env.EMAIL_HOST,
-			port: 465,
-			secure: true,
-			auth: {
-				user: process.env.EMAIL_USERNAME,
-				pass: process.env.EMAIL_PASS,
-			},
-			tls: {
-				rejectUnauthorized: false,
-			},
-		});
 
 		const mailOptions = {
-			from: process.env.EMAIL_USERNAME,
+			from: process.env.SUPER_ADMIN_EMAIL,
 			to: email,
 			subject: "Your Account Login Credentials",
 			html: `
@@ -41,4 +28,4 @@ async function sendEmailUserDetails(email, password, res) {
 	}
 }
 
-export default sendEmailUserDetails;
+export default sendUserCredential;
